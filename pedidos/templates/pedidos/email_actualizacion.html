@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #f5f7fa;
+            margin: 0;
+            padding: 15px;
+        }
+        .container { 
+            max-width: 650px; 
+            margin: 0 auto; 
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px 20px; 
+            text-align: center; 
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content { 
+            padding: 25px 20px; 
+        }
+        
+        /* Barra de progreso MEJORADA Y RESPONSIVE */
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .progress-tracker::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            z-index: 1;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            z-index: 2;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            min-width: 60px;
+        }
+        
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border: 3px solid #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 8px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .step-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            color: #6c757d;
+            line-height: 1.3;
+            max-width: 70px;
+        }
+        
+        /* Estados activos/completados */
+        .progress-step.active .step-icon {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .progress-step.completed .step-icon {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+        }
+        
+        .progress-step.completed .step-label {
+            color: #28a745;
+            font-weight: 700;
+        }
+        
+        /* Información del pedido RESPONSIVE */
+        .order-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        @media (min-width: 480px) {
+            .info-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-label {
+            font-size: 11px;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Estados específicos */
+        .status-message {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .status-message h3 {
+            margin: 0 0 12px 0;
+            color: #1976d2;
+            font-size: 18px;
+        }
+        
+        .status-message p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .tracking-link {
+            display: inline-block;
+            background: #ff6b35;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 12px 0 5px 0;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+        
+        .tracking-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,107,53,0.3);
+        }
+        
+        .footer { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-size: 11px; 
+            color: #666; 
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+        
+        .saludo {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .intro {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .order-title {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #495057;
+            text-align: center;
+            font-size: 16px;
+        }
+        
+        /* Responsive para móviles pequeños */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .progress-step {
+                min-width: 50px;
+            }
+            
+            .step-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .step-label {
+                font-size: 10px;
+                max-width: 60px;
+            }
+            
+            .progress-tracker::before,
+            .progress-bar {
+                top: 20px;
+                height: 6px;
+            }
+            
+            .status-message {
+                padding: 15px;
+            }
+            
+            .status-message h3 {
+                font-size: 16px;
+            }
+            
+            .status-message p {
+                font-size: 13px;
+            }
+        }
+        
+        /* Ajustes para tablets */
+        @media (min-width: 768px) {
+            .step-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 20px;
+            }
+            
+            .step-label {
+                font-size: 12px;
+                max-width: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Seguimiento de tu Pedido</h1>
+        </div>
+        
+        <div class="content">
+            <p class="intro">Hola <strong>{{ pedido.nombre_cliente }}</strong>,</p>
+            <p class="intro">Te mantenemos informado sobre el estado de tu pedido:</p>
+            
+            <!-- Barra de progreso MEJORADA -->
+            <div class="progress-container">
+                <div class="progress-tracker">
+                    <div class="progress-bar" id="progressBar"></div>
+                    
+                    <div class="progress-step {% if progress >= 1 %}completed{% elif progress == 1 %}active{% endif %}" id="step1">
+                        <div class="step-icon">📋</div>
+                        <div class="step-label">Pedido Recibido</div>
+                    </div>
+                    
+                    <div class="progress-step {% if progress >= 2 %}completed{% elif progress == 2 %}active{% endif %}" id="step2">
+                        <div class="step-icon">👨‍🍳</div>
+                        <div class="step-label">En Preparación</div>
+                    </div>
+                    
+                    <div class="progress-step {% if progress >= 3 %}completed{% elif progress == 3 %}active{% endif %}" id="step3">
+                        <div class="step-icon">✅</div>
+                        <div class="step-label">Preparado</div>
+                    </div>
+                    
+                    <div class="progress-step {% if progress >= 4 %}completed{% elif progress == 4 %}active{% endif %}" id="step4">
+                        <div class="step-icon">🚚</div>
+                        <div class="step-label">Despachado</div>
+                    </div>
+                    
+                    <div class="progress-step {% if progress >= 5 %}completed{% elif progress == 5 %}active{% endif %}" id="step5">
+                        <div class="step-icon">🎉</div>
+                        <div class="step-label">Entregado</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensaje de estado específico -->
+            <div class="status-message">
+                {% if accion == "inicio_preparacion" %}
+                <h3>👨‍🍳 Tu pedido está en preparación</h3>
+                <p>Hemos iniciado el proceso de preparación de tu pedido. Estamos trabajando para que todo esté perfecto.</p>
+                
+                {% elif accion == "fin_preparacion" %}
+                <h3>✅ Tu pedido ha sido preparado</h3>
+                <p>¡Excelente noticia! Tu pedido está listo y será despachado muy pronto.</p>
+                
+                {% elif accion == "fin_despacho" %}
+                <h3>🚚 Tu pedido ha sido despachado</h3>
+                <p>Tu pedido está en camino a tu dirección. Prepárate para recibirlo.</p>
+                
+                {% elif accion == "numero_guia" and tracking.numero_guia %}
+                <h3>📮 Número de guía asignado</h3>
+                <p>Puedes rastrear tu pedido en tiempo real:</p>
+                <a href="https://www.tramaco.com.ec/tracking/{{ tracking.numero_guia }}" 
+                   class="tracking-link" target="_blank">
+                   🔍 Rastrear Guía: {{ tracking.numero_guia }}
+                </a>
+                
+                {% elif accion == "cerrado" %}
+                <h3>🎉 ¡Pedido entregado satisfactoriamente!</h3>
+                <p>Tu pedido ha sido completado. ¡Gracias por confiar en nosotros!</p>
+                
+                {% else %}
+                <h3>📋 Actualización de estado</h3>
+                <p>Tu pedido ha avanzado en nuestro proceso de preparación y envío.</p>
+                {% endif %}
+            </div>
+            
+            <!-- Información del pedido RESPONSIVE -->
+            <div class="order-info">
+                <h3 class="order-title">Información del Pedido</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Número de Pedido</span>
+                        <span class="info-value">{{ pedido.numero_pedido }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Cliente</span>
+                        <span class="info-value">{{ pedido.nombre_cliente }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Teléfono</span>
+                        <span class="info-value">{{ pedido.telefono }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total</span>
+                        <span class="info-value">${{ pedido.total_pedido|floatformat:2 }}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Dirección de Entrega</span>
+                        <span class="info-value">{{ pedido.direccion }}, {{ pedido.provincia }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="saludo">
+                <p>Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos.</p>
+                <p>Estamos aquí para ayudarte.</p>
+            </div>
+            
+            <p style="text-align: center; margin-top: 25px; font-size: 14px;">
+                Saludos cordiales,<br>
+                <strong style="font-size: 15px;">El equipo de {{ site_name }}</strong>
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>Este email fue enviado automáticamente. Por favor no respondas a este mensaje.</p>
+            <p>&copy; {% now "Y" %} {{ site_name }}. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        // Calcular el progreso basado en la acción
+        function calcularProgreso(accion) {
+            const progresos = {
+                'inicio_preparacion': 2,
+                'fin_preparacion': 3,
+                'fin_despacho': 4,
+                'numero_guia': 4,
+                'cerrado': 5
+            };
+            return progresos[accion] || 1;
+        }
+        
+        // Animar la barra de progreso
+        function animarBarraProgreso(progreso) {
+            const progressBar = document.getElementById('progressBar');
+            const porcentaje = ((progreso - 1) / 4) * 100;
+            progressBar.style.width = porcentaje + '%';
+            
+            // Resaltar los pasos completados y activos
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                const stepNumber = index + 1;
+                if (stepNumber < progreso) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (stepNumber === progreso) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+        
+        // Inicializar cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            const progresoActual = calcularProgreso('{{ accion }}');
+            setTimeout(() => {
+                animarBarraProgreso(progresoActual);
+            }, 300);
+        });
+    </script>
+</body>
+</html>

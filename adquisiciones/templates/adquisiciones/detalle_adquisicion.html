@@ -1,0 +1,79 @@
+
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+<div class="module">
+    <h1>Adquisición: {{ adquisicion.numero_orden }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h3>Información General</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Proveedor:</strong> {{ adquisicion.proveedor.razon_social }}</p>
+            <p><strong>Fecha de Arribo:</strong> {{ adquisicion.fecha_arribo }}</p>
+            <p><strong>Tipo de Carga:</strong> {{ adquisicion.get_tipo_carga_display }}</p>
+            <p><strong>Estado:</strong> 
+                <span class="badge badge-{% if adquisicion.estado == 'CONFIRMADO' %}success
+                                         {% elif adquisicion.estado == 'CANCELADO' %}danger
+                                         {% else %}warning{% endif %}">
+                    {{ adquisicion.get_estado_display }}
+                </span>
+            </p>
+            <p><strong>Inventario Procesado:</strong> 
+                {% if adquisicion.inventario_procesado %}✅ Sí{% else %}❌ No{% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3>Productos ({{ adquisicion.detalles.count }})</h3>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Lote</th>
+                        <th>Vigencia Lote</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalles %}
+                    <tr>
+                        <td>{{ detalle.producto.nombre }}</td>
+                        <td>{{ detalle.cantidad }}</td>
+                        <td>{{ detalle.lote|default:"-" }}</td>
+                        <td>{{ detalle.vigencia_lote|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if puede_confirmar %}
+    <div class="card mt-3">
+        <div class="card-body">
+            <form method="post" action="{% url 'adquisiciones:confirmar_adquisicion' adquisicion.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg">
+                    ✅ Confirmar Adquisición y Agregar al Inventario
+                </button>
+                <small class="form-text text-muted">
+                    Al confirmar, todos los productos se agregarán automáticamente al inventario con sus lotes.
+                </small>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-3">
+        <a href="{% url 'admin:adquisiciones_adquisicion_changelist' %}" class="btn btn-secondary">
+            ← Volver a la lista
+        </a>
+    </div>
+</div>
+{% endblock %}

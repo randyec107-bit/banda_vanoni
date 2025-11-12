@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a class="button" href="{% url 'admin:adquisiciones_adquisicion_exportar_excel_todo' %}">
+            📊 Exportar Excel 
+        </a>
+    </li>
+{% endblock %}

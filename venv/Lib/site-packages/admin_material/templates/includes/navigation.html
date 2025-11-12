@@ -1,0 +1,367 @@
+{% load static %}
+{% load log %}
+{% load admin_material %}
+
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+    <div class="container-fluid py-1 px-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+          <li class="breadcrumb-item text-sm">
+            <a class="opacity-5 text-dark" href="{% url 'admin:index' %}">
+              <i class="material-symbols-rounded me-1">dashboard</i> Dashboard
+            </a>
+          </li>
+          <li class="breadcrumb-item text-sm text-dark active text-capitalize" aria-current="page">
+            {% admin_get_menu as app_list %}
+            {% for app in app_list %}
+              {% for model in app.models %}
+                {% if model.url and request.path == model.url %}
+                  <!-- Añadir espacios entre palabras -->
+                  {% for char in model.name %}
+                    {% if forloop.counter0 > 0 and char.isupper %} {% endif %}{{ char }}
+                  {% endfor %}
+                {% elif model.url and request.path|slice:":-1" == model.url %}
+                  <!-- Añadir espacios entre palabras -->
+                  {% for char in model.name %}
+                    {% if forloop.counter0 > 0 and char.isupper %} {% endif %}{{ char }}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {% if request.path == '/admin/' or request.path == '/admin' %}Dashboard{% endif %}
+          </li>
+        </ol>
+        
+        <!-- Título centrado - AUMENTADO EL TAMAÑO -->
+        <div class="text-center w-100 position-absolute start-0 top-50 translate-middle-y">
+          <h4 class="font-weight-bolder mb-0 text-capitalize">
+            {% admin_get_menu as app_list %}
+            {% for app in app_list %}
+              {% for model in app.models %}
+                {% if model.url and request.path == model.url %}
+                  <!-- Añadir espacios entre palabras -->
+                  {% for char in model.name %}
+                    {% if forloop.counter0 > 0 and char.isupper %} {% endif %}{{ char }}
+                  {% endfor %}
+                {% elif model.url and request.path|slice:":-1" == model.url %}
+                  <!-- Añadir espacios entre palabras -->
+                  {% for char in model.name %}
+                    {% if forloop.counter0 > 0 and char.isupper %} {% endif %}{{ char }}
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {% if request.path == '/admin/' or request.path == '/admin' %}Panel de Administración{% endif %}
+          </h4>
+        </div>
+      </nav>
+      
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+          <div class="input-group input-group-outline">
+            <label class="form-label">Type here...</label>
+            <input type="text" class="form-control">
+          </div>
+        </div>
+        <ul class="navbar-nav d-flex align-items-center justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+          
+          <!-- BOTÓN SETTINGS MEJORADO -->
+          <li class="nav-item px-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0 settings-button" style="z-index: 1001; position: relative;">
+              <i class="material-symbols-rounded fixed-plugin-button-nav">settings</i>
+            </a>
+          </li>
+          
+          <!-- NOTIFICACIONES MEJORADAS -->
+          <li class="nav-item dropdown pe-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0 position-relative" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="z-index: 1000;">
+              <i class="material-symbols-rounded">notifications</i>
+              {% get_admin_log 5 as admin_log %}
+              {% if admin_log %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px; padding: 2px 5px; transform: translate(-5px, -5px); z-index: 1002;">
+                  {{ admin_log|length }}
+              </span>
+              {% endif %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton" style="min-width: 350px; z-index: 1060;">
+                <li class="mb-2">
+                    <h6 class="dropdown-header text-dark font-weight-bold">
+                        <i class="material-symbols-rounded me-2">notifications</i>
+                        Actividades Recientes
+                        <span class="badge bg-primary ms-2" id="notification-count">{{ admin_log|length }}</span>
+                    </h6>
+                </li>
+                
+                <div id="notifications-container">
+                  <!-- Notificaciones del Admin -->
+                  {% get_admin_log 5 as admin_log %}
+                  {% if admin_log %}
+                      {% for entry in admin_log %}
+                      <li class="mb-2 notification-item">
+                          <a class="dropdown-item border-radius-md" href="{{ entry.get_admin_url }}">
+                              <div class="d-flex py-1">
+                                  <div class="my-auto">
+                                      <div class="icon icon-shape icon-sm bg-gradient-{{ entry.is_addition|yesno:'success,info,danger' }} shadow text-center border-radius-md">
+                                          <i class="material-symbols-rounded text-white" style="font-size: 16px;">
+                                              notifications
+                                          </i>
+                                      </div>
+                                  </div>
+                                  <div class="d-flex flex-column justify-content-center ms-3">
+                                      <h6 class="text-sm font-weight-normal mb-1">
+                                          <span class="font-weight-bold">{{ entry.object_repr }}</span>
+                                      </h6>
+                                      <p class="text-xs text-secondary mb-0">
+                                          <i class="fa fa-user me-1"></i>
+                                          {{ entry.user.username }}
+                                      </p>
+                                      <p class="text-xs text-secondary mb-0">
+                                          <i class="fa fa-clock me-1"></i>
+                                          <span class="notification-time" data-time="{{ entry.action_time|date:'c' }}">
+                                              {{ entry.action_time|timesince }} ago
+                                          </span>
+                                      </p>
+                                  </div>
+                              </div>
+                          </a>
+                      </li>
+                      {% endfor %}
+                  {% else %}
+                      <li class="mb-2">
+                          <a class="dropdown-item border-radius-md" href="javascript:;">
+                              <div class="d-flex py-1">
+                                  <div class="my-auto">
+                                      <div class="icon icon-shape icon-sm bg-gradient-secondary shadow text-center border-radius-md">
+                                          <i class="material-symbols-rounded text-white" style="font-size: 16px;">notifications</i>
+                                      </div>
+                                  </div>
+                                  <div class="d-flex flex-column justify-content-center ms-3">
+                                      <h6 class="text-sm font-weight-normal mb-1">
+                                          Sin actividades recientes
+                                      </h6>
+                                      <p class="text-xs text-secondary mb-0">
+                                          Los cambios en el admin aparecerán aquí
+                                      </p>
+                                  </div>
+                              </div>
+                          </a>
+                      </li>
+                  {% endif %}
+                </div>
+                
+                <li><hr class="horizontal dark my-2"></li>
+                
+                <li class="text-center">
+                    <a href="{% url 'admin:index' %}" class="text-xs text-secondary me-3">
+                        <i class="material-symbols-rounded me-1" style="font-size: 14px;">admin_panel_settings</i>
+                        Ir al Admin
+                    </a>
+                    <a href="javascript:;" class="text-xs text-secondary" onclick="refreshNotifications()">
+                        <i class="material-symbols-rounded me-1" style="font-size: 14px;">refresh</i>
+                        Actualizar
+                    </a>
+                </li>
+            </ul>
+          </li>
+
+          <!-- BOTÓN LOGOUT MEJORADO -->
+          <li class="nav-item d-flex align-items-center">
+            {% if request.user.is_authenticated %}
+              <!-- Formulario POST para logout -->
+              <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                {% csrf_token %}
+              </form>
+              <!-- Link que hace submit al formulario -->
+              <a href="#" class="nav-link text-body font-weight-bold px-0 logout-button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="z-index: 1001; position: relative;">
+                <i class="material-symbols-rounded">login</i>
+              </a>
+            {% else %}
+              <a href="{% url 'login' %}" class="nav-link text-body font-weight-bold px-0" style="z-index: 1001; position: relative;">
+                <i class="material-symbols-rounded">account_circle</i>
+              </a>
+            {% endif %}
+          </li>
+
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<script>
+// Variables globales para el sistema de notificaciones
+let notificationCheckInterval;
+
+// Función para actualizar notificaciones
+function refreshNotifications() {
+    fetch('?refresh_notifications=1', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Crear un elemento temporal para parsear el HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = html;
+        
+        // Extraer el nuevo contenido de notificaciones
+        const newNotifications = tempDiv.querySelector('#notifications-container');
+        const newCount = tempDiv.querySelector('#notification-count');
+        const newBadge = tempDiv.querySelector('.badge.bg-danger');
+        
+        if (newNotifications) {
+            // Actualizar el contenedor de notificaciones
+            document.getElementById('notifications-container').innerHTML = newNotifications.innerHTML;
+            
+            // Actualizar el contador
+            if (newCount) {
+                document.getElementById('notification-count').textContent = newCount.textContent;
+            }
+            
+            // Actualizar el badge
+            if (newBadge) {
+                const currentBadge = document.querySelector('.nav-link .badge');
+                if (currentBadge) {
+                    currentBadge.textContent = newBadge.textContent;
+                } else if (newBadge.textContent > 0) {
+                    // Crear badge si no existe
+                    const icon = document.querySelector('.nav-link .material-symbols-rounded');
+                    const badge = document.createElement('span');
+                    badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+                    badge.style.cssText = 'font-size: 10px; padding: 2px 5px; transform: translate(-5px, -5px); z-index: 1002;';
+                    badge.textContent = newBadge.textContent;
+                    icon.parentNode.appendChild(badge);
+                }
+            } else {
+                // Eliminar badge si no hay notificaciones
+                const badge = document.querySelector('.nav-link .badge');
+                if (badge) {
+                    badge.remove();
+                }
+            }
+            
+            // Actualizar tiempos relativos
+            updateRelativeTimes();
+        }
+    })
+    .catch(error => {
+        console.error('Error actualizando notificaciones:', error);
+    });
+}
+
+// Función para actualizar tiempos relativos
+function updateRelativeTimes() {
+    const timeElements = document.querySelectorAll('.notification-time');
+    timeElements.forEach(element => {
+        const timeString = element.getAttribute('data-time');
+        if (timeString) {
+            const time = new Date(timeString);
+            const now = new Date();
+            const diffMs = now - time;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            let relativeTime;
+            if (diffMins < 1) {
+                relativeTime = 'Ahora mismo';
+            } else if (diffMins < 60) {
+                relativeTime = `Hace ${diffMins} min`;
+            } else if (diffHours < 24) {
+                relativeTime = `Hace ${diffHours} h`;
+            } else {
+                relativeTime = `Hace ${diffDays} d`;
+            }
+            
+            element.textContent = relativeTime;
+        }
+    });
+}
+
+// Función para cerrar el dropdown de notificaciones
+function closeNotificationsDropdown() {
+    const dropdown = document.querySelector('#dropdownMenuButton');
+    if (dropdown && dropdown.getAttribute('aria-expanded') === 'true') {
+        const bootstrapDropdown = bootstrap.Dropdown.getInstance(dropdown);
+        if (bootstrapDropdown) {
+            bootstrapDropdown.hide();
+        }
+    }
+}
+
+// Función para iniciar el sistema de notificaciones en tiempo real
+function startNotificationPolling() {
+    // Actualizar cada 30 segundos
+    notificationCheckInterval = setInterval(refreshNotifications, 30000);
+    
+    // También actualizar cuando la ventana gana foco
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            refreshNotifications();
+        }
+    });
+    
+    // Actualizar tiempos cada minuto
+    setInterval(updateRelativeTimes, 60000);
+}
+
+// Iniciar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    startNotificationPolling();
+    updateRelativeTimes();
+    
+    // Cerrar dropdown cuando se haga click en settings o logout
+    const settingsButton = document.querySelector('.settings-button');
+    const logoutButton = document.querySelector('.logout-button');
+    
+    if (settingsButton) {
+        settingsButton.addEventListener('click', function(e) {
+            closeNotificationsDropdown();
+            // Aquí puedes agregar la funcionalidad del botón settings
+            console.log('Settings button clicked');
+        });
+    }
+    
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function(e) {
+            closeNotificationsDropdown();
+            // El logout ya está manejado por el onclick original
+        });
+    }
+    
+    // Actualizar notificaciones al abrir el dropdown
+    const dropdownButton = document.getElementById('dropdownMenuButton');
+    if (dropdownButton) {
+        dropdownButton.addEventListener('click', function() {
+            setTimeout(refreshNotifications, 100);
+        });
+    }
+    
+    // Cerrar dropdown al hacer click fuera de él
+    document.addEventListener('click', function(e) {
+        const dropdown = document.querySelector('.nav-item.dropdown');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        const isClickInsideDropdown = dropdown.contains(e.target);
+        
+        if (!isClickInsideDropdown && dropdownMenu && dropdownMenu.classList.contains('show')) {
+            closeNotificationsDropdown();
+        }
+    });
+});
+
+// Limpiar intervalo cuando la página se cierre
+window.addEventListener('beforeunload', function() {
+    if (notificationCheckInterval) {
+        clearInterval(notificationCheckInterval);
+    }
+});
+</script>

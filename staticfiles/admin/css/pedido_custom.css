@@ -1,0 +1,75 @@
+/* Campos más grandes para mejor visibilidad */
+.select2-container .select2-selection--single {
+    height: 38px !important;
+    padding: 6px 12px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 26px !important;
+    font-size: 14px !important;
+}
+
+/* ✅ CAMPOS DE PRODUCTO Y LOTE MÁS ANCHOS - MISMO TAMAÑO */
+.field-producto select,
+.field-lote select {
+    min-width: 500px !important;
+    width: 500px !important;
+    max-width: 500px !important;
+}
+
+/* ✅ SELECT2 personalizado para campos más grandes */
+.select2-container--default .select2-selection--single {
+    min-width: 500px !important;
+    width: 500px !important;
+}
+
+.select2-container {
+    min-width: 500px !important;
+    width: 500px !important;
+}
+
+/* Mejorar la apariencia de los campos readonly */
+.readonly {
+    font-weight: bold;
+    color: #333;
+    padding: 4px 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+    min-width: 200px;
+    display: inline-block;
+}
+
+/* Estilos para los checkboxes grandes */
+.field-checkboxes_alineados {
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 20px 0;
+}
+
+/* ✅ Mejorar el layout de los inlines para campos más grandes */
+.inline-group .tabular tr.has_original td {
+    padding: 8px !important;
+}
+
+.inline-group .tabular td {
+    vertical-align: top !important;
+}
+
+/* ✅ Asegurar que los campos de producto y lote tengan suficiente espacio */
+.field-producto, .field-lote {
+    min-width: 520px !important;
+}
+
+/* ✅ Mejorar la responsividad en pantallas más pequeñas */
+@media (max-width: 768px) {
+    .field-producto select,
+    .field-lote select,
+    .select2-container--default .select2-selection--single,
+    .select2-container {
+        min-width: 300px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}

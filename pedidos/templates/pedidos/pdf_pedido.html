@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido {{ pedido.numero_pedido }}</title>
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+            margin: 25px;
+            background: #fff;
+            line-height: 1.5;
+        }
+
+        /* Encabezado elegante */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: #2c3e50;
+        }
+
+        .company-info {
+            flex: 1;
+        }
+
+        .company-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .company-tagline {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+
+        .document-info {
+            text-align: right;
+        }
+
+        .document-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .document-number {
+            font-size: 18px;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        /* Información del cliente */
+        .client-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        /* Tabla de productos */
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .products-table thead {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+        }
+
+        .products-table th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .products-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            transition: background-color 0.2s;
+        }
+
+        .products-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .products-table tbody tr:hover {
+            background: #e3f2fd;
+        }
+
+        .products-table td {
+            padding: 12px;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* Totales */
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .totals-container {
+            width: 300px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .total-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 16px;
+            color: #2c3e50;
+            padding-top: 12px;
+        }
+
+        .total-label {
+            font-weight: 500;
+        }
+
+        .total-value {
+            font-weight: 600;
+        }
+
+        /* Información adicional */
+        .additional-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-block {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-block-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+        }
+
+        .info-block-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        /* Pie de página */
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .terms {
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 11px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estados */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* Mejoras de impresión */
+        @media print {
+            body {
+                margin: 0;
+                padding: 15px;
+                font-size: 12px;
+            }
+            
+            .header {
+                margin-bottom: 15px;
+            }
+            
+            .client-info, .additional-info {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .products-table tbody tr:hover {
+                background: inherit;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado -->
+    <div class="header">
+        <div class="company-info">
+            <div class="company-name">BANDA VANONI</div>
+            <div class="company-tagline">Soluciones integrales para su negocio</div>
+            <div class="document-info">
+                <div class="document-title">PEDIDO</div>
+                <div class="document-number">#{{ pedido.numero_pedido }}</div>
+            </div>
+        </div>
+        <div class="document-info">
+            <p><strong>Fecha de impresión:</strong> {% now "d/m/Y H:i" %}</p>
+            <p><strong>Vendedor:</strong> {{ pedido.get_vendedor_display }}</p>
+            <p><strong>Estado:</strong> 
+                <span class="status-badge {% if pedido.aprobado %}status-approved{% else %}status-pending{% endif %}">
+                    {{ pedido.aprobado|yesno:"Aprobado,Pendiente" }}
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Información del cliente -->
+    <div class="client-info">
+        <div class="section-title">INFORMACIÓN DEL CLIENTE</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label">CLIENTE</span>
+                <span class="info-value">{{ pedido.nombre_cliente }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CI/RUC</span>
+                <span class="info-value">{{ pedido.cliente.cedula }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">TELÉFONO</span>
+                <span class="info-value">{{ pedido.telefono }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">CORREO ELECTRÓNICO</span>
+                <span class="info-value">{{ pedido.correo }}</span>
+            </div>
+            <div class="info-item" style="grid-column: span 2;">
+                <span class="info-label">DIRECCIÓN DE ENTREGA</span>
+                <span class="info-value">{{ pedido.direccion }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Productos -->
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th style="width: 10%;">Código</th>
+                <th style="width: 35%;">Producto</th>
+                <th style="width: 15%;">Lote</th>
+                <th style="width: 10%;" class="text-center">Cantidad</th>
+                <th style="width: 15%;" class="text-right">Precio Unit.</th>
+                <th style="width: 15%;" class="text-right">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in pedido.detalles.all %}
+            <tr>
+                <td>{{ d.producto.codigo }}</td>
+                <td>{{ d.nombre_producto }}</td>
+                <td>{% if d.lote %}{{ d.lote.lote }}{% else %}-{% endif %}</td>
+                <td class="text-center">{{ d.cantidad }}</td>
+                <td class="text-right">$ {{ d.precio1|floatformat:2 }}</td>
+                <td class="text-right">$ {{ d.subtotal|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Totales -->
+    <div class="totals-section">
+        <div class="totals-container">
+            {% with total=pedido.total_pedido %}
+            {% with iva=pedido.total_pedido|floatformat:2 %}
+            <div class="total-row">
+                <span class="total-label">SUBTOTAL:</span>
+                <span class="total-value">$ {{ pedido.total_pedido|floatformat:2 }}</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">IVA (0%):</span>
+                <span class="total-value">$ 0.00</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">TOTAL:</span>
+                <span class="total-value">$ {{ pedido.total_pedido|floatformat:2 }}</span>
+            </div>
+            {% endwith %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="additional-info">
+        <div class="info-block">
+            <span class="info-block-title">CONDICIONES DE PAGO</span>
+            <span class="info-block-value">Contado</span>
+        </div>
+        <div class="info-block">
+            <span class="info-block-title">MÉTODO DE ENTREGA</span>
+            <span class="info-block-value">Delivery</span>
+        </div>
+        <div class="info-block">
+            <span class="info-block-title">VÁLIDO HASTA</span>
+            <span class="info-block-value">{% now "d/m/Y" %}</span>
+        </div>
+    </div>
+
+    <!-- Pie de página -->
+    <div class="footer">
+        <p>Este documento es generado automáticamente por el sistema de pedidos.</p>
+        <p>Banda Vanoni &copy; {% now "Y" %} - Todos los derechos reservados</p>
+        <div class="terms">
+            <p>Los precios mostrados en este documento incluyen IVA. Cualquier variación será notificada con antelación.</p>
+        </div>
+    </div>
+</body>
+</html>

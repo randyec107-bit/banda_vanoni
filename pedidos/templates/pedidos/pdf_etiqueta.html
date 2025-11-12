@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Etiqueta Pedido {{ tracking.pedido.numero_pedido }}</title>
+    <style>
+        @page { size: 10cm 5cm; margin: 0; } 
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+            width: 10cm;
+            height: 5cm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .box {
+            border: 1px solid #2c3e50;
+            border-radius: 6px;
+            padding: 6px;
+            width: 98%;
+            height: 98%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #fdfdfd;
+        }
+
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .content p {
+            margin: 2px 0;
+            line-height: 1.2;
+            font-size: 10px;
+            color: #333;
+        }
+
+        .content p span {
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 9px;
+            color: #555;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="header">
+            ETIQUETA DE ENVÍO
+        </div>
+
+        <div class="content">
+            <p><span>Pedido:</span> {{ tracking.pedido.numero_pedido }}</p>
+            <p><span>Cliente:</span> {{ tracking.pedido.nombre_cliente }}</p>
+            <p><span>Dirección:</span> {{ tracking.pedido.direccion }}</p>
+            <p><span>Número de Guía:</span> {{ tracking.numero_guia }}</p>
+        </div>
+
+        <div class="footer">
+            Impreso automáticamente por Sistema de Pedidos
+        </div>
+    </div>
+</body>
+</html>

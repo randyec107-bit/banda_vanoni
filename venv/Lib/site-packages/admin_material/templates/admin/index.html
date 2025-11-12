@@ -1,0 +1,322 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-gradient-dark">
+                <div class="card-body p-5 text-center text-white">
+                    <img src="{% static 'assets/img/banda-vanoni-logo.png' %}" alt="Banda Vanoni" class="mb-4" height="80">
+                    <h1 class="display-4 font-weight-bolder mb-3">BANDA VANONI</h1>
+                    <p class="lead mb-4">Líderes en equipos médicos y suministros hospitalarios de alta calidad</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <span class="badge bg-success fs-6">+30 Años de Experiencia</span>
+                        <span class="badge bg-info fs-6">Equipos Certificados</span>
+                        <span class="badge bg-warning fs-6">Servicio Técnico</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Servicios Principales -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bolder text-dark">Nuestros Servicios</h2>
+            <p class="text-lg">Soluciones integrales para el sector salud</p>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header p-3 text-center bg-gradient-success">
+                    <i class="material-symbols-rounded text-white display-4">medical_services</i>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bolder">Equipos Médicos</h5>
+                    <p class="card-text">Venta y distribución de equipos médicos de última generación</p>
+                    <ul class="list-unstyled text-start">
+                        <li>✔ Monitores de signos vitales</li>
+                        <li>✔ Equipos de diagnóstico</li>
+                        <li>✔ Mobiliario hospitalario</li>
+                        <li>✔ Instrumental quirúrgico</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header p-3 text-center bg-gradient-info">
+                    <i class="material-symbols-rounded text-white display-4">engineering</i>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bolder">Mantenimiento</h5>
+                    <p class="card-text">Servicio técnico especializado y mantenimiento preventivo</p>
+                    <ul class="list-unstyled text-start">
+                        <li>✔ Calibración de equipos</li>
+                        <li>✔ Reparaciones técnicas</li>
+                        <li>✔ Mantenimiento preventivo</li>
+                        <li>✔ Soporte 24/7</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header p-3 text-center bg-gradient-warning">
+                    <i class="material-symbols-rounded text-white display-4">vaccines</i>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bolder">Insumos Médicos</h5>
+                    <p class="card-text">Suministros e insumos médicos de calidad garantizada</p>
+                    <ul class="list-unstyled text-start">
+                        <li>✔ Material desechable</li>
+                        <li>✔ Medicamentos</li>
+                        <li>✔ Equipo de protección</li>
+                        <li>✔ Reactivos de laboratorio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header p-3 text-center bg-gradient-danger">
+                    <i class="material-symbols-rounded text-white display-4">support_agent</i>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title font-weight-bolder">Asesoría Técnica</h5>
+                    <p class="card-text">Consultoría y asesoramiento especializado en equipamiento médico</p>
+                    <ul class="list-unstyled text-start">
+                        <li>✔ Planificación de proyectos</li>
+                        <li>✔ Capacitación técnica</li>
+                        <li>✔ Optimización de procesos</li>
+                        <li>✔ Consultoría especializada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-gradient-dark">
+                <div class="card-body p-5">
+                    <div class="row text-center text-white">
+                        <div class="col-md-3 col-6 mb-4">
+                            <h2 class="display-3 font-weight-bolder text-success">+500</h2>
+                            <p class="mb-0">Clientes Satisfechos</p>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <h2 class="display-3 font-weight-bolder text-info">+30</h2>
+                            <p class="mb-0">Años de Experiencia</p>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <h2 class="display-3 font-weight-bolder text-warning">+1000</h2>
+                            <p class="mb-0">Equipos Instalados</p>
+                        </div>
+                        <div class="col-md-3 col-6 mb-4">
+                            <h2 class="display-3 font-weight-bolder text-danger">24/7</h2>
+                            <p class="mb-0">Soporte Técnico</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marcas que Representamos -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-gradient-info text-center">
+                    <h4 class="mb-0 text-white font-weight-bolder">Marcas que Representamos</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center text-center">
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-primary">biotech</i>
+                                <p class="mt-2 mb-0 font-weight-bold">AVANOS</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-success">monitor_heart</i>
+                                <p class="mt-2 mb-0 font-weight-bold">GREETMED</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-warning">healing</i>
+                                <p class="mt-2 mb-0 font-weight-bold">MEDEX</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-danger">ecg_heart</i>
+                                <p class="mt-2 mb-0 font-weight-bold">KAN MING NA</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-info">stethoscope</i>
+                                <p class="mt-2 mb-0 font-weight-bold">HUDSON</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-6 mb-4">
+                            <div class="brand-logo p-3">
+                                <i class="material-symbols-rounded display-4 text-dark">clinical_notes</i>
+                                <p class="mt-2 mb-0 font-weight-bold">+ Marcas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonios -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bolder text-dark">Lo que Dicen Nuestros Clientes</h2>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/team-1.jpg' %}" class="avatar avatar-lg rounded-circle me-3" alt="Cliente 1">
+                        <div>
+                            <h6 class="mb-0">Dr. Carlos Andrade</h6>
+                            <p class="text-sm text-muted mb-0">Hospital Metropolitano</p>
+                        </div>
+                    </div>
+                    <p class="card-text">"Banda Vanoni ha sido nuestro proveedor confiable por más de 10 años. Su servicio técnico es excepcional y siempre están disponibles cuando los necesitamos."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/team-2.jpg' %}" class="avatar avatar-lg rounded-circle me-3" alt="Cliente 2">
+                        <div>
+                            <h6 class="mb-0">Dra. María Fernández</h6>
+                            <p class="text-sm text-muted mb-0">Clínica Santa Ana</p>
+                        </div>
+                    </div>
+                    <p class="card-text">"La calidad de los equipos y el soporte post-venta de Banda Vanoni son incomparables. Han sido partners estratégicos en nuestro crecimiento."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/team-3.jpg' %}" class="avatar avatar-lg rounded-circle me-3" alt="Cliente 3">
+                        <div>
+                            <h6 class="mb-0">Ing. Roberto Pazmiño</h6>
+                            <p class="text-sm text-muted mb-0">Hospital de los Valles</p>
+                        </div>
+                    </div>
+                    <p class="card-text">"Su capacidad de respuesta y el conocimiento técnico de su equipo nos han ayudado a optimizar nuestros procesos hospitalarios significativamente."</p>
+                    <div class="text-warning">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contacto -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card bg-gradient-success">
+                <div class="card-body p-5 text-center text-white">
+                    <h3 class="font-weight-bolder mb-3">¿Listo para Trabajar Juntos?</h3>
+                    <p class="mb-4">Contáctenos para una consultoría gratuita y descubra cómo podemos ayudar a su institución</p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="material-symbols-rounded display-6 mb-2">phone</i>
+                            <p class="mb-1 font-weight-bold">Teléfono</p>
+                            <p class="mb-0">+593 2 123 4567</p>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="material-symbols-rounded display-6 mb-2">mail</i>
+                            <p class="mb-1 font-weight-bold">Email</p>
+                            <p class="mb-0">info@bandavanoni.com</p>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="material-symbols-rounded display-6 mb-2">location_on</i>
+                            <p class="mb-1 font-weight-bold">Dirección</p>
+                            <p class="mb-0">Quito, Ecuador</p>
+                        </div>
+                        <div class="col-md-3 col-6 text-center mb-3">
+                            <i class="material-symbols-rounded display-6 mb-2">schedule</i>
+                            <p class="mb-1 font-weight-bold">Horario</p>
+                            <p class="mb-0">Lun - Vie: 8:00 - 17:00</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-dark btn-lg mt-4 px-5">
+                        <i class="material-symbols-rounded me-2">chat</i>
+                        Solicitar Cotización
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    // Animación simple para los números de estadísticas
+    document.addEventListener('DOMContentLoaded', function() {
+        const counters = document.querySelectorAll('.display-3');
+        counters.forEach(counter => {
+            const target = parseInt(counter.innerText.replace('+', ''));
+            let current = 0;
+            const increment = target / 100;
+            
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    counter.innerText = '+' + Math.ceil(current);
+                    setTimeout(updateCounter, 20);
+                } else {
+                    counter.innerText = '+' + target;
+                }
+            };
+            
+            updateCounter();
+        });
+    });
+</script>
+{% endblock extra_js %}

@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Empresarial - Banda Vanoni</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #184f71;
+            --primary-dark: #0d3a57;
+            --primary-light: #2a6a95;
+            --secondary: #64a428;
+            --secondary-dark: #4d8220;
+            --secondary-light: #7bc536;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --gradient-primary: linear-gradient(135deg, #184f71 0%, #1c6ea4 100%);
+            --gradient-secondary: linear-gradient(135deg, #64a428 0%, #8bc34a 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-danger: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --gradient-info: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.1);
+            --shadow-xl: 0 15px 30px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            --border-radius-lg: 16px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--gray-800);
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            padding: 30px;
+        }
+
+        /* Encabezado del Dashboard */
+        .dashboard-header {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: var(--gradient-secondary);
+            border-radius: 50%;
+            transform: translate(50px, -50px);
+            opacity: 0.1;
+        }
+        
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dashboard-subtitle {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-top: 5px;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .date-display {
+            font-size: 1rem;
+            background: var(--gray-100);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-button {
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .admin-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Filtros */
+        .filters-container {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            flex: 1;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+        
+        .filter-select, .filter-input {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--gray-300);
+            background-color: white;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(24, 79, 113, 0.2);
+        }
+        
+        .filter-button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            align-self: flex-end;
+        }
+        
+        .filter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Filtros de vendedores horizontales */
+        .vendedores-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .vendedor-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: var(--gray-100);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .vendedor-filter:hover {
+            background: var(--gray-200);
+        }
+
+        .vendedor-filter.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tarjetas de Estadísticas */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            border-left: 5px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            transform: translate(20px, -20px);
+            opacity: 0.1;
+        }
+        
+        .stat-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.7rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+            z-index: 1;
+        }
+        
+        .stat-info {
+            flex: 1;
+            z-index: 1;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        .stat-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        .positive {
+            background-color: rgba(100, 164, 40, 0.15);
+            color: var(--secondary);
+        }
+        
+        .negative {
+            background-color: rgba(247, 37, 133, 0.15);
+            color: #f72585;
+        }
+        
+        /* Secciones */
+        .app-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-300);
+            width: 100%;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), transparent);
+            margin-left: 10px;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .section-action {
+            background: white;
+            border: 1px solid var(--gray-300);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .section-action:hover {
+            background: var(--gray-100);
+        }
+        
+        /* Grid de gráficas */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 25px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 25px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .chart-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-form {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                min-width: 100%;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .date-display, .admin-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Encabezado del Dashboard -->
+        <div class="dashboard-header">
+            <div>
+                <h1 class="dashboard-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Dashboard Empresarial
+                </h1>
+                <p class="dashboard-subtitle">Sistema Integral de Gestión - Banda Vanoni</p>
+            </div>
+            <div class="header-actions">
+                <div class="date-display">
+                    <i class="far fa-calendar-alt"></i>
+                    <span id="current-date"></span>
+                </div>
+                
+                <!-- BOTÓN PARA ACCEDER AL SISTEMA ADMINISTRATIVO -->
+                <a href="/admin/" class="admin-button">
+                    <i class="fas fa-cogs"></i>
+                    Sistema Administrativo
+                </a>
+            </div>
+        </div>
+        
+        <!-- Filtros -->
+        <div class="filters-container">
+            <div class="filters-header">
+                <h2 class="filters-title">
+                    <i class="fas fa-filter"></i>
+                    Filtros de Información
+                </h2>
+            </div>
+            
+            <form method="get" action="{% url 'dashboard_principal' %}">
+                <div class="filter-form">
+                    <div class="filter-group">
+                        <label class="filter-label">Vendedor</label>
+                        <select class="filter-select" name="vendedor" id="vendedor-select">
+                            <option value="all">Todos los vendedores</option>
+                            <option value="1">Angela Davila</option>
+                            <option value="2">Rocio Leon</option>
+                            <option value="3">Edwin Davila</option>
+                            <option value="4">Rafael Clavijo</option>
+                            <option value="5">Veronica Gomez</option>
+                            <option value="6">Maria Susana</option>
+                            <option value="7">Jazzmin Gonzales</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Fecha Inicio</label>
+                        <input type="date" class="filter-input" name="fecha_inicio" id="fecha-inicio">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Fecha Fin</label>
+                        <input type="date" class="filter-input" name="fecha_fin" id="fecha-fin">
+                    </div>
+                    
+                    <div class="filter-group" style="align-self: flex-end;">
+                        <button type="submit" class="filter-button">
+                            <i class="fas fa-search"></i>
+                            Aplicar Filtros
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Filtros de vendedores horizontales -->
+            <div class="vendedores-filters">
+                <div class="vendedor-filter active" data-vendedor="all">
+                    <i class="fas fa-users"></i>
+                    Todos
+                </div>
+                <div class="vendedor-filter" data-vendedor="1">
+                    <i class="fas fa-user"></i>
+                    Angela Davila
+                </div>
+                <div class="vendedor-filter" data-vendedor="2">
+                    <i class="fas fa-user"></i>
+                    Rocio Leon
+                </div>
+                <div class="vendedor-filter" data-vendedor="3">
+                    <i class="fas fa-user"></i>
+                    Edwin Davila
+                </div>
+                <div class="vendedor-filter" data-vendedor="4">
+                    <i class="fas fa-user"></i>
+                    Rafael Clavijo
+                </div>
+                <div class="vendedor-filter" data-vendedor="5">
+                    <i class="fas fa-user"></i>
+                    Veronica Gomez
+                </div>
+                <div class="vendedor-filter" data-vendedor="6">
+                    <i class="fas fa-user"></i>
+                    Maria Susana
+                </div>
+                <div class="vendedor-filter" data-vendedor="7">
+                    <i class="fas fa-user"></i>
+                    Jazzmin Gonzales
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tarjetas de Estadísticas -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-primary);">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="pedidos-totales">0</div>
+                    <div class="stat-label">Total Pedidos</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="pedidos-aprobados">0</span> aprobados
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-secondary);">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="facturas-totales">0</div>
+                    <div class="stat-label">Facturas Emitidas</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="facturas-mayores-100">0</span>% >$100
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-info);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="clientes-totales">0</div>
+                    <div class="stat-label">Clientes Activos</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="clientes-con-descuento">0</span> con descuento
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--gradient-warning);">
+                    <i class="fas fa-warehouse"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="productos-totales">0</div>
+                    <div class="stat-label">Productos Totales</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span id="cantidad-total-productos">0</span> en stock
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN ADQUISICIONES -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    Adquisiciones
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="adquisiciones">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Adquisiciones</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="adquisiciones-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Adquisiciones por Tipo de Empaque</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="adquisiciones-empaque-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Adquisiciones por Proveedor</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="adquisiciones-proveedor-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Valor Total en Adquisiciones</h3>
+                        <div class="chart-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="adquisiciones-valor-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN CLIENTES -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i>
+                    Clientes
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="clientes">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Clientes</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="clientes-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Clientes por Provincia</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="clientes-provincia-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Clientes con Descuento y Envío</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="clientes-descuento-envio-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Ingreso de Nuevos Clientes</h3>
+                        <div class="chart-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="nuevos-clientes-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN FACTURACIÓN -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Facturación
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="facturacion">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Facturas</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="facturas-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Facturas por Mes</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="facturas-mes-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Facturas por Encima de $100</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="facturas-100-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN INVENTARIO -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-warehouse"></i>
+                    Inventario
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="inventario">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Productos</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="inventario-productos-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Almacenaje</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-store"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="almacenaje-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN PEDIDOS -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-bag"></i>
+                    Pedidos
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="pedidos">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Pedidos</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pedidos-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Items Vendidos</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-list"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="items-vendidos-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Pedidos que Requieren Envío</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pedidos-envio-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Pedidos por Vendedor</h3>
+                        <div class="chart-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pedidos-vendedor-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Pedidos Aprobados</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pedidos-aprobados-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN PRODUCTOS -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-tags"></i>
+                    Productos
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="productos">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Productos por Proveedor</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="productos-proveedor-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Grupo, Subgrupo y Clasificación</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="productos-clasificacion-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Cantidad Total de Productos</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="productos-cantidad-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Comparación Existencia vs Precio</h3>
+                        <div class="chart-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="productos-existencia-precio-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SECCIÓN PROVEEDORES -->
+        <div class="app-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-building"></i>
+                    Proveedores
+                </h2>
+                <div class="section-actions">
+                    <div class="section-action export-btn" data-section="proveedores">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Número de Proveedores</h3>
+                        <div class="chart-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="proveedores-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Productos por Proveedor</h3>
+                        <div class="chart-icon" style="background: var(--gradient-secondary);">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="proveedores-productos-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Proveedores por Ciudad</h3>
+                        <div class="chart-icon" style="background: var(--gradient-info);">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="proveedores-ciudad-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo para las gráficas (serán reemplazados por datos reales de Django)
+        const adquisicionesMensual = [
+            { mes: 'Ene', total: 5 },
+            { mes: 'Feb', total: 8 },
+            { mes: 'Mar', total: 12 },
+            { mes: 'Abr', total: 7 },
+            { mes: 'May', total: 15 },
+            { mes: 'Jun', total: 10 }
+        ];
+        
+        const adquisicionesTipoEmpaque = [
+            { tipo_carga: 'EMBALADO', total: 25 },
+            { tipo_carga: 'PALLETS', total: 18 },
+            { tipo_carga: 'SUELTA', total: 12 }
+        ];
+        
+        const adquisicionesProveedor = [
+            { proveedor__razon_social: 'Proveedor A', total: 15 },
+            { proveedor__razon_social: 'Proveedor B', total: 12 },
+            { proveedor__razon_social: 'Proveedor C', total: 8 }
+        ];
+        
+        const clientesProvincia = [
+            { provincia: 'Pichincha', total: 45 },
+            { provincia: 'Guayas', total: 32 },
+            { provincia: 'Azuay', total: 18 }
+        ];
+        
+        const clientesDescuentoEnvio = {
+            con_descuento: 25,
+            requiere_envio: 30,
+            ambos: 15,
+            ninguno: 40
+        };
+        
+        const nuevosClientes = [
+            { mes: 'Ene', total: 8 },
+            { mes: 'Feb', total: 12 },
+            { mes: 'Mar', total: 15 },
+            { mes: 'Abr', total: 10 },
+            { mes: 'May', total: 18 },
+            { mes: 'Jun', total: 14 }
+        ];
+        
+        const facturasMensual = [
+            { mes: 'Ene', total: 20 },
+            { mes: 'Feb', total: 25 },
+            { mes: 'Mar', total: 30 },
+            { mes: 'Abr', total: 22 },
+            { mes: 'May', total: 35 },
+            { mes: 'Jun', total: 28 }
+        ];
+        
+        const productosUbicacion = [
+            { ubicacion: 'PRINCIPAL', total: 120 },
+            { ubicacion: 'OUTLET', total: 45 },
+            { ubicacion: 'CUARENTENA', total: 8 }
+        ];
+        
+        const pedidosMensual = [
+            { mes: 'Ene', total: 25 },
+            { mes: 'Feb', total: 28 },
+            { mes: 'Mar', total: 31 },
+            { mes: 'Abr', total: 26 },
+            { mes: 'May', total: 35 },
+            { mes: 'Jun', total: 30 }
+        ];
+        
+        const pedidosVendedor = [
+            { vendedor: 'Angela Davila', total: 25 },
+            { vendedor: 'Rocio Leon', total: 18 },
+            { vendedor: 'Edwin Davila', total: 22 },
+            { vendedor: 'Rafael Clavijo', total: 15 },
+            { vendedor: 'Veronica Gomez', total: 20 },
+            { vendedor: 'Maria Susana', total: 12 },
+            { vendedor: 'Jazzmin Gonzales', total: 16 }
+        ];
+        
+        const productosProveedor = [
+            { proveedor_principal: 'Proveedor A', total: 45 },
+            { proveedor_principal: 'Proveedor B', total: 38 },
+            { proveedor_principal: 'Proveedor C', total: 28 }
+        ];
+        
+        const productosGrupo = [
+            { descripcion: 'Material Quirúrgico', total_productos: 65 },
+            { descripcion: 'Medicamentos', total_productos: 45 },
+            { descripcion: 'Equipo Médico', total_productos: 32 }
+        ];
+        
+        const productosExistenciaPrecio = [
+            { existencia: 100, precio: 25.50 },
+            { existencia: 80, precio: 18.75 },
+            { existencia: 120, precio: 32.20 },
+            { existencia: 60, precio: 12.80 },
+            { existencia: 90, precio: 28.40 }
+        ];
+        
+        const proveedoresProductos = [
+            { proveedor: 'Proveedor A', total_productos: 45 },
+            { proveedor: 'Proveedor B', total_productos: 38 },
+            { proveedor: 'Proveedor C', total_productos: 28 }
+        ];
+        
+        const proveedoresCiudad = [
+            { ciudad: 'Quito', total: 15 },
+            { ciudad: 'Guayaquil', total: 12 },
+            { ciudad: 'Cuenca', total: 8 },
+            { ciudad: 'Ambato', total: 6 }
+        ];
+
+        // Colores para las gráficas
+        const colors = {
+            primary: '#184f71',
+            secondary: '#64a428',
+            success: '#4cc9f0',
+            danger: '#f72585',
+            warning: '#f8961e',
+            info: '#4895ef'
+        };
+        
+        // Función para inicializar todas las gráficas
+        function initializeAllCharts() {
+            console.log('Inicializando gráficas del dashboard...');
+            
+            // Configuración global de Chart.js
+            Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            Chart.defaults.color = '#6c757d';
+            Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            
+            // Función auxiliar para crear gradientes
+            function createGradient(ctx, color1, color2) {
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, color1);
+                gradient.addColorStop(1, color2);
+                return gradient;
+            }
+            
+            // ADQUISICIONES - Gráfica mensual
+            const adquisicionesCtx = document.getElementById('adquisiciones-chart');
+            if (adquisicionesCtx) {
+                new Chart(adquisicionesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: adquisicionesMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Adquisiciones',
+                            data: adquisicionesMensual.map(item => item.total),
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(adquisicionesCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // ADQUISICIONES - Tipo de empaque
+            const adquisicionesEmpaqueCtx = document.getElementById('adquisiciones-empaque-chart');
+            if (adquisicionesEmpaqueCtx) {
+                new Chart(adquisicionesEmpaqueCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: adquisicionesTipoEmpaque.map(item => item.tipo_carga),
+                        datasets: [{
+                            data: adquisicionesTipoEmpaque.map(item => item.total),
+                            backgroundColor: [colors.primary, colors.secondary, colors.warning, colors.danger, colors.info],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            // ADQUISICIONES - Por proveedor
+            const adquisicionesProveedorCtx = document.getElementById('adquisiciones-proveedor-chart');
+            if (adquisicionesProveedorCtx) {
+                new Chart(adquisicionesProveedorCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: adquisicionesProveedor.map(item => item.proveedor__razon_social),
+                        datasets: [{
+                            label: 'Adquisiciones',
+                            data: adquisicionesProveedor.map(item => item.total),
+                            backgroundColor: createGradient(adquisicionesProveedorCtx.getContext('2d'), colors.secondary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // ADQUISICIONES - Valor total
+            const adquisicionesValorCtx = document.getElementById('adquisiciones-valor-chart');
+            if (adquisicionesValorCtx) {
+                new Chart(adquisicionesValorCtx, {
+                    type: 'line',
+                    data: {
+                        labels: adquisicionesMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Valor Estimado',
+                            data: adquisicionesMensual.map(item => item.total * 100),
+                            borderColor: colors.warning,
+                            backgroundColor: createGradient(adquisicionesValorCtx.getContext('2d'), colors.warning + '80', colors.warning + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // CLIENTES - Gráfica mensual
+            const clientesCtx = document.getElementById('clientes-chart');
+            if (clientesCtx) {
+                new Chart(clientesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: nuevosClientes.map(item => item.mes),
+                        datasets: [{
+                            label: 'Clientes',
+                            data: nuevosClientes.map(item => item.total),
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(clientesCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // CLIENTES - Por provincia
+            const clientesProvinciaCtx = document.getElementById('clientes-provincia-chart');
+            if (clientesProvinciaCtx) {
+                new Chart(clientesProvinciaCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: clientesProvincia.map(item => item.provincia),
+                        datasets: [{
+                            label: 'Clientes',
+                            data: clientesProvincia.map(item => item.total),
+                            backgroundColor: createGradient(clientesProvinciaCtx.getContext('2d'), colors.secondary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // CLIENTES - Descuento y envío
+            const clientesDescuentoEnvioCtx = document.getElementById('clientes-descuento-envio-chart');
+            if (clientesDescuentoEnvioCtx) {
+                new Chart(clientesDescuentoEnvioCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Con descuento', 'Requieren envío', 'Ambos', 'Ninguno'],
+                        datasets: [{
+                            data: [
+                                clientesDescuentoEnvio.con_descuento,
+                                clientesDescuentoEnvio.requiere_envio,
+                                clientesDescuentoEnvio.ambos,
+                                clientesDescuentoEnvio.ninguno
+                            ],
+                            backgroundColor: [colors.primary, colors.secondary, colors.warning, colors.danger],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            // CLIENTES - Nuevos clientes
+            const nuevosClientesCtx = document.getElementById('nuevos-clientes-chart');
+            if (nuevosClientesCtx) {
+                new Chart(nuevosClientesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: nuevosClientes.map(item => item.mes),
+                        datasets: [{
+                            label: 'Nuevos Clientes',
+                            data: nuevosClientes.map(item => item.total),
+                            borderColor: colors.warning,
+                            backgroundColor: createGradient(nuevosClientesCtx.getContext('2d'), colors.warning + '80', colors.warning + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // FACTURACIÓN - Gráfica mensual
+            const facturasCtx = document.getElementById('facturas-chart');
+            if (facturasCtx) {
+                new Chart(facturasCtx, {
+                    type: 'line',
+                    data: {
+                        labels: facturasMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Facturas',
+                            data: facturasMensual.map(item => item.total),
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(facturasCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // FACTURACIÓN - Por mes (bar)
+            const facturasMesCtx = document.getElementById('facturas-mes-chart');
+            if (facturasMesCtx) {
+                new Chart(facturasMesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: facturasMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Facturas',
+                            data: facturasMensual.map(item => item.total),
+                            backgroundColor: createGradient(facturasMesCtx.getContext('2d'), colors.secondary, colors.warning),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // FACTURACIÓN - Mayores a $100
+            const facturas100Ctx = document.getElementById('facturas-100-chart');
+            if (facturas100Ctx) {
+                new Chart(facturas100Ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Mayores a $100', 'Menores a $100'],
+                        datasets: [{
+                            data: [65, 35],
+                            backgroundColor: [colors.info, colors.danger],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            // INVENTARIO - Productos
+            const inventarioProductosCtx = document.getElementById('inventario-productos-chart');
+            if (inventarioProductosCtx) {
+                new Chart(inventarioProductosCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Productos',
+                            data: [850, 880, 900, 920, 950, 980, 1000, 1020, 1050, 1080, 1100, 1120],
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(inventarioProductosCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // INVENTARIO - Almacenaje
+            const almacenajeCtx = document.getElementById('almacenaje-chart');
+            if (almacenajeCtx) {
+                new Chart(almacenajeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: productosUbicacion.map(item => item.ubicacion),
+                        datasets: [{
+                            label: 'Productos',
+                            data: productosUbicacion.map(item => item.total),
+                            backgroundColor: [colors.primary, colors.secondary, colors.warning],
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PEDIDOS - Gráfica mensual
+            const pedidosCtx = document.getElementById('pedidos-chart');
+            if (pedidosCtx) {
+                new Chart(pedidosCtx, {
+                    type: 'line',
+                    data: {
+                        labels: pedidosMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Pedidos',
+                            data: pedidosMensual.map(item => item.total),
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(pedidosCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PEDIDOS - Items vendidos
+            const itemsVendidosCtx = document.getElementById('items-vendidos-chart');
+            if (itemsVendidosCtx) {
+                new Chart(itemsVendidosCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: pedidosMensual.map(item => item.mes),
+                        datasets: [{
+                            label: 'Items',
+                            data: pedidosMensual.map(item => item.total * 10),
+                            backgroundColor: createGradient(itemsVendidosCtx.getContext('2d'), colors.secondary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PEDIDOS - Requieren envío
+            const pedidosEnvioCtx = document.getElementById('pedidos-envio-chart');
+            if (pedidosEnvioCtx) {
+                new Chart(pedidosEnvioCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Requieren envío', 'No requieren envío'],
+                        datasets: [{
+                            data: [75, 105],
+                            backgroundColor: [colors.info, colors.danger],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            // PEDIDOS - Por vendedor
+            const pedidosVendedorCtx = document.getElementById('pedidos-vendedor-chart');
+            if (pedidosVendedorCtx) {
+                new Chart(pedidosVendedorCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: pedidosVendedor.map(item => item.vendedor),
+                        datasets: [{
+                            label: 'Pedidos',
+                            data: pedidosVendedor.map(item => item.total),
+                            backgroundColor: createGradient(pedidosVendedorCtx.getContext('2d'), colors.warning, colors.danger),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PEDIDOS - Aprobados
+            const pedidosAprobadosCtx = document.getElementById('pedidos-aprobados-chart');
+            if (pedidosAprobadosCtx) {
+                new Chart(pedidosAprobadosCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Aprobados', 'Pendientes'],
+                        datasets: [{
+                            data: [120, 60],
+                            backgroundColor: [colors.primary, colors.warning],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            // PRODUCTOS - Por proveedor
+            const productosProveedorCtx = document.getElementById('productos-proveedor-chart');
+            if (productosProveedorCtx) {
+                new Chart(productosProveedorCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: productosProveedor.map(item => item.proveedor_principal),
+                        datasets: [{
+                            label: 'Productos',
+                            data: productosProveedor.map(item => item.total),
+                            backgroundColor: createGradient(productosProveedorCtx.getContext('2d'), colors.primary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PRODUCTOS - Grupo, subgrupo
+            const productosClasificacionCtx = document.getElementById('productos-clasificacion-chart');
+            if (productosClasificacionCtx) {
+                new Chart(productosClasificacionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: productosGrupo.map(item => item.descripcion),
+                        datasets: [{
+                            label: 'Productos',
+                            data: productosGrupo.map(item => item.total_productos),
+                            backgroundColor: createGradient(productosClasificacionCtx.getContext('2d'), colors.secondary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PRODUCTOS - Cantidad total
+            const productosCantidadCtx = document.getElementById('productos-cantidad-chart');
+            if (productosCantidadCtx) {
+                new Chart(productosCantidadCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Productos',
+                            data: [850, 880, 900, 920, 950, 980, 1000, 1020, 1050, 1080, 1100, 1120],
+                            borderColor: colors.warning,
+                            backgroundColor: createGradient(productosCantidadCtx.getContext('2d'), colors.warning + '80', colors.warning + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PRODUCTOS - Existencia vs Precio
+            const productosExistenciaPrecioCtx = document.getElementById('productos-existencia-precio-chart');
+            if (productosExistenciaPrecioCtx) {
+                new Chart(productosExistenciaPrecioCtx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'Productos',
+                            data: productosExistenciaPrecio.map(item => ({
+                                x: item.existencia,
+                                y: item.precio
+                            })),
+                            backgroundColor: colors.primary,
+                            borderColor: colors.primary,
+                            pointRadius: 8,
+                            pointHoverRadius: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Existencia: ${context.parsed.x}, Precio: $${context.parsed.y}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                title: { display: true, text: 'Precio ($)' },
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                            },
+                            x: {
+                                title: { display: true, text: 'Existencia' },
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // PROVEEDORES - Gráfica general
+            const proveedoresCtx = document.getElementById('proveedores-chart');
+            if (proveedoresCtx) {
+                new Chart(proveedoresCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                        datasets: [{
+                            label: 'Proveedores',
+                            data: [45, 48, 50, 52, 55, 58, 60, 62, 65, 68, 70, 72],
+                            borderColor: colors.primary,
+                            backgroundColor: createGradient(proveedoresCtx.getContext('2d'), colors.primary + '80', colors.primary + '20'),
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PROVEEDORES - Productos por proveedor
+            const proveedoresProductosCtx = document.getElementById('proveedores-productos-chart');
+            if (proveedoresProductosCtx) {
+                new Chart(proveedoresProductosCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: proveedoresProductos.map(item => item.proveedor),
+                        datasets: [{
+                            label: 'Productos',
+                            data: proveedoresProductos.map(item => item.total_productos),
+                            backgroundColor: createGradient(proveedoresProductosCtx.getContext('2d'), colors.secondary, colors.info),
+                            borderWidth: 0,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(0, 0, 0, 0.05)' } },
+                            x: { grid: { display: false } }
+                        }
+                    }
+                });
+            }
+            
+            // PROVEEDORES - Por ciudad
+            const proveedoresCiudadCtx = document.getElementById('proveedores-ciudad-chart');
+            if (proveedoresCiudadCtx) {
+                new Chart(proveedoresCiudadCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: proveedoresCiudad.map(item => item.ciudad),
+                        datasets: [{
+                            data: proveedoresCiudad.map(item => item.total),
+                            backgroundColor: [colors.primary, colors.secondary, colors.warning, colors.danger, colors.info, '#9c27b0', '#607d8b'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+            
+            console.log('Todas las gráficas inicializadas correctamente');
+        }
+        
+        // Funcionalidad para los filtros de vendedores
+        function initializeInteractivity() {
+            // Establecer fecha actual
+            const now = new Date();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            // Establecer fechas por defecto (últimos 30 días)
+            const fechaFin = new Date();
+            const fechaInicio = new Date();
+            fechaInicio.setDate(fechaInicio.getDate() - 30);
+            
+            document.getElementById('fecha-inicio').valueAsDate = fechaInicio;
+            document.getElementById('fecha-fin').valueAsDate = fechaFin;
+            
+            // Establecer valores de ejemplo en las tarjetas
+            document.getElementById('pedidos-totales').textContent = '180';
+            document.getElementById('pedidos-aprobados').textContent = '120';
+            document.getElementById('facturas-totales').textContent = '150';
+            document.getElementById('facturas-mayores-100').textContent = '65';
+            document.getElementById('clientes-totales').textContent = '110';
+            document.getElementById('clientes-con-descuento').textContent = '25';
+            document.getElementById('productos-totales').textContent = '173';
+            document.getElementById('cantidad-total-productos').textContent = '2,500';
+            
+            document.querySelectorAll('.vendedor-filter').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    // Remover clase activa de todos los filtros
+                    document.querySelectorAll('.vendedor-filter').forEach(f => {
+                        f.classList.remove('active');
+                    });
+                    
+                    // Agregar clase activa al filtro seleccionado
+                    this.classList.add('active');
+                    
+                    // Actualizar el select de vendedor
+                    const vendedorSelect = document.getElementById('vendedor-select');
+                    vendedorSelect.value = this.dataset.vendedor;
+                });
+            });
+            
+            // Funcionalidad para los botones de exportar
+            document.querySelectorAll('.export-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    alert(`Exportando datos de la sección: ${section}`);
+                });
+            });
+        }
+        
+        // Inicializar el dashboard cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado - inicializando dashboard...');
+            initializeAllCharts();
+            initializeInteractivity();
+        });
+        
+        // Actualización automática cada 30 segundos (opcional)
+        // setInterval(() => {
+        //     location.reload();
+        // }, 30000);
+    </script>
+</body>
+</html>

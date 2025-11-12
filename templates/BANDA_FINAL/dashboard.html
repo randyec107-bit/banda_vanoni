@@ -1,0 +1,217 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% block content %}
+
+<div class="container-fluid py-2">
+  <div class="row">
+    <div class="ms-3">
+      <h3 class="mb-0 h4 font-weight-bolder">Dashboard</h3>
+      <p class="mb-4">
+        Aquí se muestran tus métricas clave de ventas, usuarios y rendimiento.
+      </p>
+    </div>
+
+    <!-- Cards KPI -->
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-header p-2 ps-3">
+          <div class="d-flex justify-content-between">
+            <div>
+              <p class="text-sm mb-0 text-capitalize">Ventas Hoy</p>
+              <h4 class="mb-0">${{ kpis.ventas_hoy }}</h4>
+            </div>
+            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark text-center border-radius-lg">
+              <i class="material-symbols-rounded opacity-10">shopping_cart</i>
+            </div>
+          </div>
+        </div>
+        <hr class="dark horizontal my-0">
+        <div class="card-footer p-2 ps-3">
+          <p class="mb-0 text-sm">
+            <span class="text-success font-weight-bolder">{{ kpis.ventas_hoy_variacion }}% </span> respecto a la semana pasada
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-header p-2 ps-3">
+          <div class="d-flex justify-content-between">
+            <div>
+              <p class="text-sm mb-0 text-capitalize">Usuarios Hoy</p>
+              <h4 class="mb-0">{{ kpis.usuarios_hoy }}</h4>
+            </div>
+            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark text-center border-radius-lg">
+              <i class="material-symbols-rounded opacity-10">person</i>
+            </div>
+          </div>
+        </div>
+        <hr class="dark horizontal my-0">
+        <div class="card-footer p-2 ps-3">
+          <p class="mb-0 text-sm">
+            <span class="text-success font-weight-bolder">{{ kpis.usuarios_hoy_variacion }}% </span> respecto al mes pasado
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+      <div class="card">
+        <div class="card-header p-2 ps-3">
+          <div class="d-flex justify-content-between">
+            <div>
+              <p class="text-sm mb-0 text-capitalize">Tareas Completadas</p>
+              <h4 class="mb-0">{{ kpis.tareas_completadas }}</h4>
+            </div>
+            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark text-center border-radius-lg">
+              <i class="material-symbols-rounded opacity-10">check_circle</i>
+            </div>
+          </div>
+        </div>
+        <hr class="dark horizontal my-0">
+        <div class="card-footer p-2 ps-3">
+          <p class="mb-0 text-sm">
+            <span class="text-success font-weight-bolder">{{ kpis.tareas_variacion }}% </span> respecto a ayer
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6">
+      <div class="card">
+        <div class="card-header p-2 ps-3">
+          <div class="d-flex justify-content-between">
+            <div>
+              <p class="text-sm mb-0 text-capitalize">Proyectos Activos</p>
+              <h4 class="mb-0">{{ kpis.proyectos_activos }}</h4>
+            </div>
+            <div class="icon icon-md icon-shape bg-gradient-dark shadow-dark text-center border-radius-lg">
+              <i class="material-symbols-rounded opacity-10">work</i>
+            </div>
+          </div>
+        </div>
+        <hr class="dark horizontal my-0">
+        <div class="card-footer p-2 ps-3">
+          <p class="mb-0 text-sm">
+            <span class="text-success font-weight-bolder">{{ kpis.proyectos_variacion }}% </span> respecto al mes
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row mt-4">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-0">Ventas Semanales</h6>
+          <p class="text-sm">Última semana</p>
+          <div class="chart">
+            <canvas id="chart-ventas-semanal" class="chart-canvas" height="170"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-0">Usuarios Mensuales</h6>
+          <p class="text-sm">Últimos 12 meses</p>
+          <div class="chart">
+            <canvas id="chart-usuarios-mensual" class="chart-canvas" height="170"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="mb-0">Tareas Completadas</h6>
+          <p class="text-sm">Últimos 9 meses</p>
+          <div class="chart">
+            <canvas id="chart-tareas" class="chart-canvas" height="170"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "includes/footer.html" %}
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'assets/js/plugins/chartjs.min.js' %}"></script>
+<script>
+// Ventas Semanales
+var ventasSemanal = JSON.parse('{{ kpis.ventas_semana|safe|escapejs }}');
+var labelsSemana = JSON.parse('{{ kpis.labels_semana|safe|escapejs }}');
+var ctxVentas = document.getElementById("chart-ventas-semanal").getContext("2d");
+new Chart(ctxVentas, {
+    type: "bar",
+    data: {
+        labels: labelsSemana,
+        datasets: [{
+            label: "Ventas",
+            backgroundColor: "#43A047",
+            data: ventasSemanal
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+    }
+});
+
+// Usuarios Mensuales
+var usuariosMensual = JSON.parse('{{ kpis.usuarios_mes|safe|escapejs }}');
+var labelsMes = JSON.parse('{{ kpis.labels_mes|safe|escapejs }}');
+var ctxUsuarios = document.getElementById("chart-usuarios-mensual").getContext("2d");
+new Chart(ctxUsuarios, {
+    type: "line",
+    data: {
+        labels: labelsMes,
+        datasets: [{
+            label: "Usuarios",
+            borderColor: "#1E88E5",
+            backgroundColor: "transparent",
+            data: usuariosMensual
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+    }
+});
+
+// Tareas Completadas
+var tareasCompletadas = JSON.parse('{{ kpis.tareas|safe|escapejs }}');
+var labelsTareas = JSON.parse('{{ kpis.labels_tareas|safe|escapejs }}');
+var ctxTareas = document.getElementById("chart-tareas").getContext("2d");
+new Chart(ctxTareas, {
+    type: "line",
+    data: {
+        labels: labelsTareas,
+        datasets: [{
+            label: "Tareas",
+            borderColor: "#FBC02D",
+            backgroundColor: "transparent",
+            data: tareasCompletadas
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+    }
+});
+</script>
