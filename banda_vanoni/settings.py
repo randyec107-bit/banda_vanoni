@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-0#e#e&=6(alij87)j#73ik)w#&mfnx9*q5#kmz91-r@s0)d14a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['randyp107.pythonanywhere.com', 'localhost']
+ALLOWED_HOSTS = ['randyp107.pythonanywhere.com', 'localhost','127.0.0.1']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "adquisiciones",
     "pedidos",
     "facturacion",
+
 ]
 
 MIDDLEWARE = [
@@ -139,8 +140,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  
-EMAIL_HOST_PASSWORD = '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'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get('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', '')  
 DEFAULT_FROM_EMAIL = 'randypenaherrera42@gmail.com'
 SITE_NAME = 'Banda Vanoni Cia. Ltda.'
 
