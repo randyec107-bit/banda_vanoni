@@ -1,0 +1,219 @@
+{% load i18n static admin_material %}
+
+<aside style="z-index: 1;" class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2 bg-white my-2" id="sidenav-main">
+    <div class="sidenav-header">
+        <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand px-4 py-3 m-0" href="{% url "index" %}">
+            <img src="{% static "assets/img/logo-ct-dark.png" %}" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+            <span class="ms-1 text-sm text-dark">Banda Vanoni</span>
+        </a>
+    </div>
+    <hr class="horizontal dark mt-0 mb-2">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            {% admin_get_menu as app_list %}
+            {% if app_list %}
+                {% for app in app_list %}
+                    {% if app.has_perms and not app.pinned %}
+                        {% comment %} Verificar si alguna app está activa - MEJORADO {% endcomment %}
+                        {% with app_has_active=False %}
+                            {% for model in app.models %}
+                                {% if model.url and request.path == model.url %}
+                                    {% with app_has_active=True %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% comment %} Asignar color único para cada app {% endcomment %}
+                            {% cycle 'primary' 'success' 'warning' 'info' 'danger' as app_color silent %}
+                            
+                            <li class="nav-item">
+                                <a data-bs-toggle="collapse" href="#app-{{ forloop.counter }}" 
+                                   class="nav-link text-dark {% if app_has_active %}active app-active-{{ app_color }}{% endif %}" 
+                                   aria-controls="app-{{ forloop.counter }}" 
+                                   role="button" 
+                                   aria-expanded="{% if app_has_active %}true{% else %}false{% endif %}">
+                                    <i class="material-symbols-rounded {% if app_has_active %}text-white{% else %}opacity-5{% endif %}">dashboard</i>
+                                    <span class="nav-link-text ms-2 ps-1 {% if app_has_active %}text-white fw-bold{% endif %}">{{ app.label }}</span>
+                                </a>
+                                
+                                {% if app.models %}
+                                <div class="collapse {% if app_has_active %}show{% else %}{% endif %}" id="app-{{ forloop.counter }}">
+                                    <ul class="nav">
+                                        {% for model in app.models %}
+                                            {% if model.url %}
+                                                <li class="nav-item">
+                                                    <a class="nav-link text-dark {% if request.path == model.url %}active model-active-{{ app_color }} text-white{% endif %}" 
+                                                       href="{{ model.url }}">
+                                                        <span class="sidenav-mini-icon {% if request.path == model.url %}text-white{% endif %}">{{ model.label|first }}</span>
+                                                        <span class="sidenav-normal ms-2 ps-1 {% if request.path == model.url %}text-white fw-bold{% endif %}">{{ model.label }}</span>
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li class="nav-item">
+                                                    <span class="nav-link text-muted">{{ model.label }}</span>
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                {% endif %}
+                            </li>
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</aside>
+
+<style>
+/* Colores para apps activas - SIN MARGIN que causa superposición */
+.app-active-primary { 
+    background: linear-gradient(135deg, rgba(203, 12, 159, 0.9), rgba(203, 12, 159, 0.6)) !important; 
+    border-left: 4px solid #cb0c9f !important; 
+    border-radius: 4px !important;
+}
+
+.app-active-success { 
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(34, 197, 94, 0.6)) !important; 
+    border-left: 4px solid #22c55e !important; 
+    border-radius: 4px !important;
+}
+
+.app-active-warning { 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(245, 158, 11, 0.6)) !important; 
+    border-left: 4px solid #f59e0b !important; 
+    border-radius: 4px !important;
+}
+
+.app-active-info { 
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.6)) !important; 
+    border-left: 4px solid #3b82f6 !important; 
+    border-radius: 4px !important;
+}
+
+.app-active-danger { 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.9), rgba(239, 68, 68, 0.6)) !important; 
+    border-left: 4px solid #ef4444 !important; 
+    border-radius: 4px !important;
+}
+
+/* Colores para modelos activos - SIN MARGIN que causa superposición */
+.model-active-primary { 
+    background: linear-gradient(135deg, rgba(203, 12, 159, 0.8), rgba(203, 12, 159, 0.4)) !important; 
+    border-left: 3px solid #cb0c9f !important; 
+    border-radius: 4px !important;
+}
+
+.model-active-success { 
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.8), rgba(34, 197, 94, 0.4)) !important; 
+    border-left: 3px solid #22c55e !important; 
+    border-radius: 4px !important;
+}
+
+.model-active-warning { 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.8), rgba(245, 158, 11, 0.4)) !important; 
+    border-left: 3px solid #f59e0b !important; 
+    border-radius: 4px !important;
+}
+
+.model-active-info { 
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.4)) !important; 
+    border-left: 3px solid #3b82f6 !important; 
+    border-radius: 4px !important;
+}
+
+.model-active-danger { 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(239, 68, 68, 0.4)) !important; 
+    border-left: 3px solid #ef4444 !important; 
+    border-radius: 4px !important;
+}
+
+/* Asegurar que el contenido no se superponga */
+.sidenav {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+}
+
+/* Contenedor principal del admin debe tener margen para el sidebar */
+.main-content {
+    margin-left: 260px !important;
+    width: calc(100% - 260px) !important;
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 1199px) {
+    .sidenav {
+        transform: translateX(-100%) !important;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+    
+    .sidenav.show {
+        transform: translateX(0) !important;
+    }
+}
+</style>
+
+<script>
+// JavaScript para mantener el collapse abierto cuando está activo - CORREGIDO
+document.addEventListener('DOMContentLoaded', function() {
+    function openActiveCollapses() {
+        // Buscar modelos activos y abrir sus collapses padres
+        const activeModelLinks = document.querySelectorAll('.nav-link.active.model-active-primary, .nav-link.active.model-active-success, .nav-link.active.model-active-warning, .nav-link.active.model-active-info, .nav-link.active.model-active-danger');
+        
+        activeModelLinks.forEach(activeLink => {
+            // Encontrar el collapse padre (app) de este modelo activo
+            const appCollapse = activeLink.closest('.collapse');
+            if (appCollapse) {
+                // Abrir el collapse de la app
+                const bsCollapse = new bootstrap.Collapse(appCollapse, {
+                    toggle: false
+                });
+                bsCollapse.show();
+                
+                // También activar el link de la app padre
+                const appLink = document.querySelector('[href="#' + appCollapse.id + '"]');
+                if (appLink) {
+                    appLink.setAttribute('aria-expanded', 'true');
+                    // Asegurar que la app también tenga la clase active
+                    appLink.classList.add('active');
+                }
+            }
+        });
+        
+        // También abrir collapses de apps que ya están activas
+        const activeAppLinks = document.querySelectorAll('.nav-link.active.app-active-primary, .nav-link.active.app-active-success, .nav-link.active.app-active-warning, .nav-link.active.app-active-info, .nav-link.active.app-active-danger');
+        
+        activeAppLinks.forEach(appLink => {
+            const collapseId = appLink.getAttribute('href');
+            if (collapseId && collapseId.startsWith('#app-')) {
+                const collapseElement = document.querySelector(collapseId);
+                if (collapseElement) {
+                    const bsCollapse = new bootstrap.Collapse(collapseElement, {
+                        toggle: false
+                    });
+                    bsCollapse.show();
+                    appLink.setAttribute('aria-expanded', 'true');
+                }
+            }
+        });
+    }
+    
+    // Ejecutar al cargar la página
+    openActiveCollapses();
+    
+    // También ejecutar después de un pequeño delay por si el DOM no está completamente listo
+    setTimeout(openActiveCollapses, 100);
+    
+    // Ejecutar también cuando la página termine de cargar completamente
+    window.addEventListener('load', openActiveCollapses);
+});
+</script>
