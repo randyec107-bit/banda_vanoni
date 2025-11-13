@@ -100,6 +100,7 @@ urlpatterns = [
     path("inventario/", include("inventario.urls")),
     path("proveedores/", include("proveedores.urls")),
     path('dashboard/', include('dashboard.urls')),
+    path('', include('admin_material.urls')),
     
     # Logout configurado
     path('logout/', LogoutView.as_view(next_page='/admin/login/'), name='logout'),
